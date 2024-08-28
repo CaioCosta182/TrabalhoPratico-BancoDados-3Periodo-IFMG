@@ -6,7 +6,18 @@ Certifique-se de ter os seguintes requisitos instalados antes de executar o cód
 - [MySql Server + Workbench](https://dev.mysql.com/downloads/workbench/)
   Ao instalar o WorkBench, atente-se para instalar corretamente e configurar as credenciais de acesso do root.
 
-  ### 1.2. Clone o repositório
+## Passo 1: Git
+
+### 1.1. Configurando o git
+
+Certifique-se de cadastrar seu usuário e email no git da sua máquina
+Para verificar se já está cadastrado, execute:
+
+```bash
+git config -l
+```
+
+### 1.2. Clone o repositório
 
 ```bash
 git clone https://github.com/LuSilva710/BancodeDados_TrabalhoPratico.git
