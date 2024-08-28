@@ -44,7 +44,8 @@ async function getDataFromDatabase(query, params = []) {
 // Rota para obter todos os jogadores
 app.get("/api/jogadores", async (req, res) => {
   try {
-    const jogadores = await getDataFromDatabase("SELECT * FROM jogador"); // Executa a query para buscar jogadores
+    const jogadores = await getDataFromDatabase("SELECT j.ID_Jogador, j.Nome_Jogador, j.Pontuacao_Total, c.Nome FROM jogador j join Cla c on j.ID_Cla = c.ID_Cla ORDER BY j.ID_Jogador LIMIT 10;"); // Executa a query para buscar jogadores
+    console.log(jogadores);
     res.json(jogadores); // Retorna os dados dos jogadores em formato JSON
   } catch (err) {
     console.error("Erro ao buscar jogadores:", err);
@@ -55,7 +56,7 @@ app.get("/api/jogadores", async (req, res) => {
 // Rota para obter todos os clãs
 app.get("/api/clans", async (req, res) => {
   try {
-    const clans = await getDataFromDatabase("SELECT * FROM cla"); // Executa a query para buscar clãs
+    const clans = await getDataFromDatabase("SELECT c.ID_Cla, c.Nome, c.Data_Criacao, l.Nome_Liga FROM Cla c join Liga l on c.ID_Liga = l.ID_Liga"); // Executa a query para buscar clãs
     res.status(200).json(clans); // Retorna os dados dos clãs em formato JSON com status 200
   } catch (err) {
     console.error("Erro ao buscar clãs:", err);
@@ -66,7 +67,7 @@ app.get("/api/clans", async (req, res) => {
 // Rota para obter todos os eventos
 app.get("/api/eventos", async (req, res) => {
   try {
-    const eventos = await getDataFromDatabase("SELECT * FROM evento"); // Executa a query para buscar eventos
+    const eventos = await getDataFromDatabase("SELECT tipo, count(tipo) FROM evento group by tipo;"); // Executa a query para buscar eventos
     res.json(eventos); // Retorna os dados dos eventos em formato JSON
   } catch (err) {
     console.error("Erro ao buscar eventos:", err);
@@ -77,7 +78,7 @@ app.get("/api/eventos", async (req, res) => {
 // Rota para obter todos os ataques
 app.get("/api/ataques", async (req, res) => {
   try {
-    const ataques = await getDataFromDatabase("SELECT * FROM ataque"); // Executa a query para buscar ataques
+    const ataques = await getDataFromDatabase("SELECT a.ID_Ataque, j.Nome_Jogador, a.N_Ataques, a.Vitorias, a.Derrotas FROM ataque a join jogador j on a.ID_Jogador = j.ID_Jogador order by a.Vitorias desc LIMIT 10;"); // Executa a query para buscar ataques
     res.json(ataques); // Retorna os dados dos ataques em formato JSON
   } catch (err) {
     console.error("Erro ao buscar ataques:", err);
@@ -87,10 +88,10 @@ app.get("/api/ataques", async (req, res) => {
 
 // Rota para adicionar um jogador
 app.post("/api/jogadores", async (req, res) => {
-  const { Nome_Jogador, Data_Entrada, Pontuacao_Total } = req.body; // Extrai os dados do corpo da requisição
-
+  const { Nome_Jogador, Data_Entrada, Pontuacao_Total, idCla} = req.body; // Extrai os dados do corpo da requisição
+  console.log(Nome_Jogador, Data_Entrada, Pontuacao_Total, idCla)
   // Validação de entrada
-  if (!Nome_Jogador || !Data_Entrada || Pontuacao_Total === undefined) {
+  if (!Nome_Jogador || !Data_Entrada || Pontuacao_Total === undefined || !idCla) {
     return res.status(400).send("Parâmetros inválidos para adicionar jogador."); // Retorna um erro 400 se houver parâmetros inválidos
   }
 
@@ -99,9 +100,9 @@ app.post("/api/jogadores", async (req, res) => {
     return res.status(400).send("Data de entrada inválida."); // Retorna um erro 400 se a data for inválida
   }
 
-  const query = "INSERT INTO Jogador (Nome_Jogador, Data_Entrada, Pontuacao_Total) VALUES (?, ?, ?)";
+  const query = "INSERT INTO Jogador (Nome_Jogador, Data_Entrada, Pontuacao_Total, ID_Cla) VALUES (?, ?, ?, ?)";
   try {
-    await getDataFromDatabase(query, [Nome_Jogador, formattedDate.toISOString().split('T')[0], Pontuacao_Total]); // Insere um novo jogador no banco de dados
+    await getDataFromDatabase(query, [Nome_Jogador, formattedDate.toISOString().split('T')[0], Pontuacao_Total, idCla]); // Insere um novo jogador no banco de dados
     res.status(200).send("Jogador adicionado com sucesso!"); // Retorna sucesso se o jogador for adicionado
   } catch (err) {
     console.error("Erro ao adicionar jogador:", err);
@@ -119,7 +120,7 @@ app.delete("/api/jogadores/:id", async (req, res) => {
   }
 
   const deleteQueries = [
-    `DELETE FROM jogador_cla WHERE ID_Jogador = ?`,
+    `DELETE FROM Ataque WHERE ID_Jogador = ?`,
     `DELETE FROM jogador WHERE ID_Jogador = ?`
   ];
 
@@ -163,8 +164,7 @@ app.get("/api/ranking/cla", async (req, res) => {
   const query = `
     SELECT c.Nome, SUM(j.Pontuacao_Total) AS Pontuacao
     FROM Cla c
-    JOIN Jogador_Cla jc ON c.ID_Cla = jc.ID_Cla
-    JOIN Jogador j ON jc.ID_Jogador = j.ID_Jogador
+    JOIN Jogador j ON c.ID_Cla = j.ID_Cla
     GROUP BY c.ID_Cla
     ORDER BY Pontuacao DESC
     LIMIT 10;
@@ -180,7 +180,7 @@ app.get("/api/ranking/cla", async (req, res) => {
 
 app.get('/api/liga', async (req, res) => {
   try {
-      const ligas = await getDataFromDatabase('SELECT * FROM liga');
+      const ligas = await getDataFromDatabase('SELECT * FROM liga order by Pontuacao_Maxima desc');
       res.json(ligas);
   } catch (err) {
       console.error('Erro ao buscar ligas:', err);

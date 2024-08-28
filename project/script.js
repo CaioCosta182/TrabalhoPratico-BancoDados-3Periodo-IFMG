@@ -46,8 +46,8 @@ async function loadJogadores() {
     <tr>
       <th>ID</th>
       <th>Nome</th>
-      <th>Data Entrada</th>
       <th>Pontuação Total</th>
+      <th>Clã</th>
       <th>Ações</th>
     </tr>
   `;
@@ -63,10 +63,9 @@ async function loadClans() {
       <th>Nome</th>
       <th>Data Criação</th>
       <th>Liga</th>
-      <th>Ações</th>
     </tr>
   `;
-  renderTable("clansTable", headers, data);
+  renderTable("clansTable", headers, data, false);
 }
 
 async function loadEventos() {
@@ -74,9 +73,8 @@ async function loadEventos() {
   const data = await fetchData("http://localhost:3001/api/eventos");
   const headers = `
     <tr>
-      <th>ID</th>
       <th>Tipo</th>
-      <th>Número da Semana</th>
+      <th>Quantidades realizadas</th>
     </tr>
   `;
   renderTable("eventosTable", headers, data, false);
@@ -88,7 +86,7 @@ async function loadAtaques() {
   const headers = `
     <tr>
         <th>ID</th>
-        <th>Tipo de Evento</th>
+        <th>Nome Jogador</th>
         <th>Número de Ataques</th>
         <th>Pontuação por Vitórias</th>
         <th>Pontuação por Derrota</th>
@@ -145,9 +143,10 @@ async function addJogador(event) {
   const nomeJogador = document.getElementById('Nome_Jogador').value;
   const dataEntrada = document.getElementById('Data_Entrada').value;
   const Pontuacao_Total = document.getElementById('Pontuacao_Total').value;
+  const idCla = document.getElementById('ID_Cla').value;
 
   // Verifica se todos os campos foram preenchidos
-  if (!nomeJogador || !dataEntrada || Pontuacao_Total === undefined) {
+  if (!nomeJogador || !dataEntrada || Pontuacao_Total === undefined || !idCla) {
     console.error("Todos os campos são obrigatórios.");
     return;
   }
@@ -157,7 +156,7 @@ async function addJogador(event) {
     const response = await fetch("http://localhost:3001/api/jogadores", {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ Nome_Jogador: nomeJogador, Data_Entrada: dataEntrada, Pontuacao_Total: Pontuacao_Total }),
+      body: JSON.stringify({ Nome_Jogador: nomeJogador, Data_Entrada: dataEntrada, Pontuacao_Total: Pontuacao_Total, idCla: idCla}),
     });
 
     if (response.ok) {
