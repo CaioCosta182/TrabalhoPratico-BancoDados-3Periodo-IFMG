@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento do Clã</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Gerenciamento do Clã</h1>
+    </header>
+
+    <main>
+        <!-- Seção de Adição de Jogador -->
+        <section id="adicionar-jogador" class="form-section">
+            <h2>Adicionar Jogador</h2>
+            <form id="formAddJogador">
+                <div class="form-group">
+                    <label for="Nome_Jogador">Nome do Jogador</label>
+                    <input type="text" id="Nome_Jogador" name="Nome_Jogador" placeholder="Nome do Jogador" required>
+                </div>
+                <div class="form-group">
+                    <label for="Data_Entrada">Data de Entrada</label>
+                    <input type="date" id="Data_Entrada" name="Data_Entrada" required>
+                </div>
+                <div class="form-group">
+                    <label for="Ultima_Pontuacao">Pontuação</label>
+                    <input type="number" id="Pontuacao_Total" placeholder="Pontuação" required>
+                </div>
+                <button type="submit">Adicionar Jogador</button>
+            </form>
+        </section>
+
+        
+
+         <!-- Seção de Ranking de Jogadores -->
+         <section id="ranking">
+            <h2><i class="fa fa-trophy" aria-hidden="true"></i> 
+                 Melhores Jogadores (Últimas 4 Semanas)</h2>
+            <table id="rankingJogadorTable">
+                <tbody>
+                    <!-- Conteúdo será inserido pelo JavaScript -->
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Seção de Ranking de Clãs -->
+        <section id="rankingCla">
+            <h2><i class="fa fa-trophy" aria-hidden="true"></i>   Melhores Clãs (Últimas 4 Semanas)</h2>
+            <table id="rankingClaTable">
+                <tbody>
+                    <!-- Conteúdo será inserido pelo JavaScript -->
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Seção de Jogadores -->
+        <section id="jogadores">
+            <h2>Jogadores</h2>
+            <table id="jogadoresTable">
+                <tbody>
+                    <!-- Conteúdo será inserido pelo JavaScript -->
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Seção de Clãs -->
+        <section id="clans">
+            <h2>Clãs</h2>
+            <table id="clansTable">
+                <tbody>
+                    <!-- Conteúdo será inserido pelo JavaScript -->
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Seção de Eventos -->
+        <section id="eventos">
+            <h2>Eventos</h2>
+            <table id="eventosTable">
+                <tbody>
+                    <!-- Conteúdo será inserido pelo JavaScript -->
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Seção de Ataques -->
+        <section id="ataques">
+            <h2>Ataques</h2>
+            <table id="ataquesTable">
+                <tbody>
+                    <!-- Conteúdo será inserido pelo JavaScript -->
+                </tbody>
+            </table>
+        </section>
+
+         <!-- Seção de Ligas -->
+         <section id="liga">
+            <h2>Ligas</h2>
+            <table id="ligasTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome da Liga</th>
+                        <th>Pontuação Mínima</th>
+                        <th>Pontuação Máxima</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Dados das ligas serão preenchidos aqui -->
+                </tbody>
+            </table>
+        </section>
+
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+@font-face {
+    font-family: 'You Blockhead';
+    src: url('./fonts/Clash-Royale-Font/YouBlockhead.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+body {
+    font-family: 'You Blockhead', Arial, sans-serif;
+    margin: 400px 20px;
+    background-image: url('images/loading_screen_the_flood_4k.jpg'); 
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat; 
+}
+
+h1, h2 {
+    color: #000000; /* Cor do texto */
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), /* Brilho branco */
+                 0 0 20px rgba(255, 255, 255, 0.6), 
+                 0 0 30px rgba(255, 255, 255, 0.4);
+    font-family: 'You Blockhead', Arial, sans-serif; /* Fonte personalizada */
+}
+
+.form-group {
+    color: #0b0b0b;
+    display: flex;
+    align-items: center; 
+    margin-bottom: 10px; 
+}
+
+.form-group label {
+    margin-right: 10px; 
+    width: 150px; 
+}
+
+.form-group input {
+    font-family: 'You Blockhead', Arial, sans-serif;
+    color:rgba(0, 0, 0, 0.4);
+    border-radius: 5px; 
+    padding: 0 10px;
+    height: 40px;
+    flex: 1; 
+}
+
+.form-group button {
+    margin-left: 10px; /* Espaço entre o input e o botão */
+    padding: 5px 10px; /* Preenchimento do botão */
+}
+
+table {
+    width: 100%;
+    border-collapse: separate; 
+    border-spacing: 0.25cm; 
+    margin-bottom: 20px;
+}
+
+
+th, td {
+    background-color: #ffffff;
+    padding: 10px;
+    text-align: left;
+    border-radius: 5px; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+/* Estilo dos botões */
+
+button {
+    font-family: 'You Blockhead', Arial, sans-serif;
+    display: block;
+    width: 100%;
+    padding: 10px 0;
+    background-color: #ffffff;
+    text-align: center;
+    font-size: 16px;
+    color: #333;
+    cursor: pointer;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.delete-btn {
+    border: none;
+}
