@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerenciamento do Clã</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -32,10 +33,7 @@
                 <div class="form-group">
                     <label for="Cla">Clã</label>
                     <select name="Cla" id="ID_Cla" placeholder="Clã" required>
-                        <option value="1">CelestialWolves</option>
-                        <option value="2">FuryKnights</option>
-                        <option value="3">GalacticStorm</option>
-                        <option value="4">IronGuardians</option>
+                            <!-- Conteúdo será inserido pelo JavaScript -->
                     </select>
                 </div>
                 <button type="submit">Adicionar Jogador</button>
@@ -120,6 +118,21 @@
             </table>
         </section>
 
+        <section id="promocao">
+            <h2>Estatísticas Royale</h2>
+            <div class="chart-container">
+                <div class="filters">
+                    <label for="reportType">Relatório :</label>
+                    <select id="reportType">
+                        <option value="playerStats">Estatísticas dos Jogadores</option>
+                        <option value="clanStats">Estatísticas dos Clãs</option>
+                    </select>
+                </div>
+                <div class="chart-container">
+                    <canvas id="myChart"></canvas>
+                </div>
+            </div>
+          </section>
 
     </main>
 

@@ -1,13 +1,14 @@
 document.addEventListener("DOMContentLoaded", () => {
   init(); // Inicializa o carregamento dos dados ao carregar a página
   document.getElementById("formAddJogador").addEventListener("submit", addJogador); // Adiciona o evento de submissão ao formulário de adicionar jogador
+  document.getElementById("reportType").addEventListener("change", handleReportChange); // Adiciona o evento de mudança ao seletor de relatório
 });
 
 async function init() {
   // Carrega todas as tabelas ao inicializar a página
-  await Promise.all([loadJogadores(), loadClans(), loadEventos(), loadAtaques(), loadRanking(), loadRankingClas(), fetchLigas()]);
+  await Promise.all([loadJogadores(), loadClansSelect(), loadClans(), loadEventos(), loadAtaques(), loadRanking(), loadRankingClas(), fetchLigas()]);
+  renderChart(); // Renderiza o gráfico ao inicializar a página
 }
-
 
 async function fetchData(endpoint) {
   // Busca dados da API no endpoint especificado
@@ -21,16 +22,31 @@ async function fetchData(endpoint) {
   }
 }
 
+async function loadClansSelect() {
+  // Carrega os dados dos clãs para o seletor
+  try {
+    const clans = await fetchData('http://localhost:3001/api/clans');
+    const selectElement = document.getElementById('ID_Cla');
+    selectElement.innerHTML = '';
+    clans.forEach(clan => {
+      const option = document.createElement('option');
+      option.value = clan.ID_Cla;
+      option.textContent = clan.Nome;
+      selectElement.appendChild(option);
+    });
+  } catch (error) {
+    console.error('Erro ao carregar dados do clã:', error);
+  }
+}
+
 function renderTable(tableId, headers, data, actionColumn = true) {
   // Renderiza uma tabela com os dados fornecidos e, opcionalmente, uma coluna de ações
   const table = document.getElementById(tableId);
   table.innerHTML = headers;
-
   data.forEach(item => {
     const row = Object.values(item).map(value => `<td>${value}</td>`).join('');
     table.innerHTML += `<tr>${row}${actionColumn ? `<td><button class="delete-btn" data-id="${item.ID_Jogador || item.ID_Cla || item.ID_Evento}">Excluir</button></td>` : ''}</tr>`;
   });
-
   // Adiciona eventos de exclusão aos botões de ação, se houver
   if (actionColumn) {
     document.querySelectorAll('.delete-btn').forEach(button => {
@@ -88,8 +104,8 @@ async function loadAtaques() {
         <th>ID</th>
         <th>Nome Jogador</th>
         <th>Número de Ataques</th>
-        <th>Pontuação por Vitórias</th>
-        <th>Pontuação por Derrota</th>
+        <th>Vitórias</th>
+        <th>Derrota</th>
     </tr>
   `;
   renderTable("ataquesTable", headers, data, false);
@@ -221,4 +237,120 @@ function populateLigaTable(ligas) {
   });
 }
 
+const ctx = document.getElementById('myChart').getContext('2d');
+const reportTypeSelect = document.getElementById('reportType');
+let myChart;
 
+// Função para criar o gráfico
+function createChart(labels, ataques, vitorias, derrotas) {
+  if (myChart) {
+    myChart.destroy(); // Remove o gráfico existente, se houver
+  }
+  
+  myChart = new Chart(ctx, {
+    type: 'bar', // Tipo de gráfico
+    data: {
+      labels: labels,
+      datasets: [
+        // {
+        //   label: 'Ataques',
+        //   data: ataques,
+        //   backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        //   borderColor: 'rgba(75, 192, 192, 1)',
+        //   borderWidth: 1
+        // },
+        {
+          label: 'Vitórias',
+          data: vitorias,
+          backgroundColor: 'rgba(54, 162, 235, 0.2)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1
+        },
+        {
+          label: 'Derrotas',
+          data: derrotas,
+          backgroundColor: 'rgba(255, 99, 132, 0.2)',
+          borderColor: 'rgba(255, 99, 132, 1)',
+          borderWidth: 1
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+}
+
+async function fetchAtaques() {
+  // Função para buscar dados dos ataques
+  try {
+    const response = await fetch("http://localhost:3001/api/ataques");
+    if (!response.ok) throw new Error('Erro ao buscar dados de ataques');
+    return await response.json();
+  } catch (error) {
+    console.error('Erro:', error);
+    return [];
+  }
+}
+
+async function fetchClans() {
+  // Função para buscar dados dos clãs
+  try {
+    const response = await fetch("http://localhost:3001/api/clans");
+    if (!response.ok) throw new Error('Erro ao buscar dados de clãs');
+    return await response.json();
+  } catch (error) {
+    console.error('Erro:', error);
+    return [];
+  }
+}
+
+async function renderChart() {
+  const selectedReportType = reportTypeSelect.value;
+  
+  if (selectedReportType === 'playerStats') {
+    const ataquesData = await fetchAtaques();
+    
+    const labels = [];
+    const ataques = [];
+    const vitorias = [];
+    const derrotas = [];
+    
+    ataquesData.forEach(item => {
+      labels.push(item.Nome_Jogador || item.Nome_Cla); // Use Nome_Jogador ou Nome_Cla dependendo do relatório
+      ataques.push(item.Numero_Ataques || 0);
+      vitorias.push(item.Vitorias || 0);
+      derrotas.push(item.Derrotas || 0);
+    });
+    
+    createChart(labels, ataques, vitorias, derrotas);
+  } else if (selectedReportType === 'clanStats') {
+    const clansData = await fetchClans();
+    
+    const labels = [];
+    const ataques = [];
+    const vitorias = [];
+    const derrotas = [];
+    
+    clansData.forEach(item => {
+      labels.push(item.Nome); // Nome do clã
+      ataques.push(item.Numero_Ataques || 0);
+      vitorias.push(item.Vitorias || 0);
+      derrotas.push(item.Derrotas || 0);
+    });
+    
+    createChart(labels, ataques, vitorias, derrotas);
+  }
+}
+
+function handleReportChange() {
+  renderChart(); // Atualiza o gráfico quando o tipo de relatório é alterado
+}
+
+// Adiciona o evento de mudança ao seletor de relatório
+reportTypeSelect.addEventListener('change', handleReportChange);

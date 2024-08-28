@@ -12,6 +12,7 @@ body {
     background-size: cover; 
     background-position: center; 
     background-repeat: no-repeat; 
+    background-attachment: fixed;
 }
 
 h1, h2 {
@@ -22,8 +23,20 @@ h1, h2 {
     font-family: 'You Blockhead', Arial, sans-serif; /* Fonte personalizada */
 }
 
+select {
+    font-family: 'You Blockhead', Arial, sans-serif;
+    color:rgba(0, 0, 0, 0.4);
+    border-radius: 5px; 
+    padding: 0 10px;
+    height: 40px;
+    flex: 1; 
+}
+
 .form-group {
-    color: #0b0b0b;
+    color: #000000; /* Cor do texto */
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), /* Brilho branco */
+                 0 0 20px rgba(255, 255, 255, 0.6), 
+                 0 0 30px rgba(255, 255, 255, 0.4);
     display: flex;
     align-items: center; 
     margin-bottom: 10px; 
@@ -86,4 +99,18 @@ button {
 
 .delete-btn {
     border: none;
+}
+
+/* Adiciona um fundo branco e alguma sombra ao container do gráfico */
+.chart-container {
+    background-color: #ffffff; 
+    border: 1px solid #ddd;   
+    border-radius: 8px;       
+    padding: 20px;             
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+    margin: 20px 0;           
+}
+
+canvas {
+    max-width: 100%;
 }
