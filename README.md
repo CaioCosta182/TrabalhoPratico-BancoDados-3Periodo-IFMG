@@ -48,8 +48,3 @@ npm install # ou yarn install
 
 ```
 
-
-## Passo 4: Acessar pelo navegador as rotas
-
-- [Página de Login](localhost:3001) - localhost:3001
-- [Página Principal](localhost:8080/home) - localhost:3001/home
