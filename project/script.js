@@ -2,6 +2,8 @@ document.addEventListener("DOMContentLoaded", () => {
   init(); // Inicializa o carregamento dos dados ao carregar a página
   document.getElementById("formAddJogador").addEventListener("submit", addJogador); // Adiciona o evento de submissão ao formulário de adicionar jogador
   document.getElementById("reportType").addEventListener("change", handleReportChange); // Adiciona o evento de mudança ao seletor de relatório
+  document.getElementById("orderByEvents").addEventListener("change", loadEventos);
+
 });
 
 async function init() {
@@ -86,7 +88,8 @@ async function loadClans() {
 
 async function loadEventos() {
   // Carrega a tabela de eventos
-  const data = await fetchData("http://localhost:3001/api/eventos");
+  const orderBy = document.getElementById('orderByEvents').value;
+  const data = await fetchData("http://localhost:3001/api/eventos/" + orderBy);
   const headers = `
     <tr>
       <th>Tipo</th>

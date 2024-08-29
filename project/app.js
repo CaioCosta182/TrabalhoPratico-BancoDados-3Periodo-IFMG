@@ -75,6 +75,30 @@ app.get("/api/eventos", async (req, res) => {
   }
 });
 
+app.get("/api/eventos/1", async (req, res) => {
+  try {
+    const { orderBy } = req.body;
+    console.log(req.body);
+    const eventos = await getDataFromDatabase("SELECT tipo, count(tipo) FROM evento group by tipo order by count(tipo) asc;"); // Executa a query para buscar eventos
+    res.json(eventos); // Retorna os dados dos eventos em formato JSON
+  } catch (err) {
+    console.error("Erro ao buscar eventos:", err);
+    res.status(500).send("Erro ao buscar eventos"); // Retorna um erro 500 se houver falha
+  }
+});
+
+app.get("/api/eventos/2", async (req, res) => {
+  try {
+    const { orderBy } = req.body;
+    console.log(req.body);
+    const eventos = await getDataFromDatabase("SELECT tipo, count(tipo) FROM evento group by tipo order by count(tipo) desc;"); // Executa a query para buscar eventos
+    res.json(eventos); // Retorna os dados dos eventos em formato JSON
+  } catch (err) {
+    console.error("Erro ao buscar eventos:", err);
+    res.status(500).send("Erro ao buscar eventos"); // Retorna um erro 500 se houver falha
+  }
+});
+
 // Rota para obter todos os ataques
 app.get("/api/ataques", async (req, res) => {
   try {

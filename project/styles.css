@@ -17,10 +17,10 @@ body {
 
 h1, h2 {
     color: #000000; /* Cor do texto */
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), /* Brilho branco */
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.8), 
                  0 0 20px rgba(255, 255, 255, 0.6), 
                  0 0 30px rgba(255, 255, 255, 0.4);
-    font-family: 'You Blockhead', Arial, sans-serif; /* Fonte personalizada */
+    font-family: 'You Blockhead', Arial, sans-serif; 
 }
 
 select {
@@ -81,9 +81,27 @@ th {
     background-color: #f2f2f2;
 }
 
-/* Estilo dos botões */
+section {
+    position: relative;
+    padding: 30px;
+}
 
-button {
+.orderBy {
+    position: absolute !important; 
+    top: 55px !important; 
+    right: 40px !important; 
+    background-color: #f0f0f0 !important; 
+    border: none !important; 
+    padding: 8px 12px !important; 
+    border-radius: 5px !important; 
+    cursor: pointer !important; 
+    display: flex !important; 
+    align-items: center !important; 
+}
+
+
+.delete-btn,
+button.add-btn {
     font-family: 'You Blockhead', Arial, sans-serif;
     display: block;
     width: 100%;
@@ -101,7 +119,7 @@ button {
     border: none;
 }
 
-/* Adiciona um fundo branco e alguma sombra ao container do gráfico */
+
 .chart-container {
     background-color: #ffffff; 
     border: 1px solid #ddd;   
