@@ -100,25 +100,50 @@ section {
 }
 
 
-.delete-btn,
-button.add-btn {
+/* Estilos base para todos os botões */
+button, 
+button.add-btn, 
+.update-btn, 
+.delete-btn {
     font-family: 'You Blockhead', Arial, sans-serif;
     display: block;
     width: 100%;
     padding: 10px 0;
-    background-color: #ffffff;
     text-align: center;
     font-size: 16px;
-    color: #333;
+    color: white; /* Cor de texto padrão para botões */
     cursor: pointer;
     text-decoration: none;
     border-radius: 5px;
+    border: none; /* Remover borda padrão */
 }
 
+/* Estilo específico para o botão de adicionar */
+button.add-btn {
+    background-color: #ffffff; /* Cor de fundo específica para adicionar */
+    color: #333; /* Cor de texto específica para adicionar */
+}
+
+/* Estilo específico para o botão de atualizar */
+.update-btn {
+    background-color: #76c3eb; /* Cor verde para o botão de atualizar */
+    margin-right: 5px; /* Espaçamento entre os botões */
+    border-radius:  5px 5px 0 0;
+}
+
+.update-btn:hover {
+    background-color: #4c91d5; /* Cor ao passar o mouse */
+}
+
+/* Estilo específico para o botão de excluir */
 .delete-btn {
-    border: none;
+    background-color: #de7596; /* Cor vermelha para o botão de excluir */
+    border-radius:  0 0 5px 5px;
 }
 
+.delete-btn:hover {
+    background-color: #c64f74; /* Cor ao passar o mouse */
+}
 
 .chart-container {
     background-color: #ffffff; 

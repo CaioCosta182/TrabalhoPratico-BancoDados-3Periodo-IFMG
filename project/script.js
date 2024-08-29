@@ -45,17 +45,49 @@ function renderTable(tableId, headers, data, actionColumn = true) {
   // Renderiza uma tabela com os dados fornecidos e, opcionalmente, uma coluna de ações
   const table = document.getElementById(tableId);
   table.innerHTML = headers;
+
   data.forEach(item => {
+    // Cria a linha da tabela com os dados
     const row = Object.values(item).map(value => `<td>${value}</td>`).join('');
-    table.innerHTML += `<tr>${row}${actionColumn ? `<td><button class="delete-btn" data-id="${item.ID_Jogador || item.ID_Cla || item.ID_Evento}">Excluir</button></td>` : ''}</tr>`;
+    
+    // Adiciona botões de ação se a coluna de ações estiver habilitada
+    const actionButtons = actionColumn ? `
+      <td>
+        <button class="update-btn" data-id="${item.ID_Jogador || item.ID_Cla || item.ID_Evento}"><i class="fas fa-sync-alt"></i></button>
+        <button class="delete-btn" data-id="${item.ID_Jogador || item.ID_Cla || item.ID_Evento}"><i class="fas fa-trash-alt"></i></button>
+      </td>` : '';
+    
+    // Insere a linha completa na tabela
+    table.innerHTML += `<tr>${row}${actionButtons}</tr>`;
   });
+
   // Adiciona eventos de exclusão aos botões de ação, se houver
   if (actionColumn) {
     document.querySelectorAll('.delete-btn').forEach(button => {
       button.addEventListener('click', deleteJogador);
     });
+
+    // Adiciona eventos de atualização aos botões de ação
+    document.querySelectorAll('.update-btn').forEach(button => {
+      button.addEventListener('click', updateJogador);
+    });
   }
 }
+
+// Função de exemplo para o evento de atualização
+function updateJogador(event) {
+  const id = event.target.dataset.id;
+  // Implementar a lógica de atualização, por exemplo, abrir um modal para editar os dados
+  console.log(`Atualizar jogador com ID: ${id}`);
+}
+
+// Função de exemplo para o evento de exclusão
+function deleteJogador(event) {
+  const id = event.target.dataset.id;
+  // Implementar a lógica de exclusão, por exemplo, enviar uma requisição para deletar do banco de dados
+  console.log(`Excluir jogador com ID: ${id}`);
+}
+
 
 async function loadJogadores() {
   // Carrega a tabela de jogadores
