@@ -65,7 +65,7 @@
         <!-- Seção de Jogadores -->
         <section id="jogadores">
             <h2>Jogadores</h2>
-            <select id="orderByEvents"  class="orderBy">
+            <select id="orderByPlayers"  class="orderBy">
                 <option value="1">Ordem crescente</option>
                 <option value="2">Ordem decrescente</option>
             </select>
@@ -76,10 +76,30 @@
             </table>
         </section>
 
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <div class="upper-modal">
+                    <span class="close">&times;</span>
+                </div>
+                <div id="modalBody">
+                    <section id="Alterar jogador" class="form-section">
+                        <h2>Alterar Nome de jogador</h2>
+                        <form id="formAlterJogador">
+                            <div class="form-group">
+                                <label for="Novo_Nome_Jogador">Novo nome do Jogador</label>
+                                <input type="text" id="Novo_Nome_Jogador" name="Novo_Nome_Jogador" placeholder="Novo nome do Jogador" required>
+                            </div>
+                            <button class="alter-btn" type="submit">Alterar Nome</button>
+                        </form>
+                    </section>
+                </div>
+            </div>
+        </div>
+
         <!-- Seção de Clãs -->
         <section id="clans">
             <h2>Clãs</h2>
-            <select id="orderByEvents"  class="orderBy">
+            <select id="orderByClans"  class="orderBy">
                 <option value="1">Ordem crescente</option>
                 <option value="2">Ordem decrescente</option>
             </select>
@@ -107,9 +127,9 @@
         <!-- Seção de Ataques -->
         <section id="ataques">
             <h2>Ataques</h2>
-            <select id="orderByEvents"  class="orderBy">
-                <option value="1">Ordem crescente</option>
-                <option value="2">Ordem decrescente</option>
+            <select id="orderByAttack"  class="orderBy">
+                <option value="1">Ordem decrescente</option>
+                <option value="2">Ordem crescente</option>
             </select>
             <table id="ataquesTable">
                 <tbody>
