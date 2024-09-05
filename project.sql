@@ -577,3 +577,10 @@ VALUES (1, 1),
 GRANT ALL PRIVILEGES ON JogoClãDB.* TO 'root'@'localhost';
 FLUSH PRIVILEGES;
 
+ALTER TABLE Cla ADD Emblema VARCHAR(255);
+
+ALTER TABLE Cla MODIFY COLUMN Emblema VARCHAR(255) FIRST;
+UPDATE `jogoclãdb`.`Cla` SET `Emblema` = 'https://www.clashroyaledicas.com/wp-content/uploads/2019/05/emote-carneiro-clash-royale.png' WHERE (`ID_Cla` = '1');
+UPDATE `jogoclãdb`.`cla` SET `Emblema` = 'https://www.clashroyaledicas.com/wp-content/uploads/2019/05/emote-goblin-mostrando-lingua-clash-royale.png' WHERE (`ID_Cla` = '2');
+UPDATE `jogoclãdb`.`cla` SET `Emblema` = 'https://www.clashroyaledicas.com/wp-content/uploads/2019/05/emote-princesa-musculosa-clash-royale.png' WHERE (`ID_Cla` = '3');
+UPDATE `jogoclãdb`.`cla` SET `Emblema` = 'https://www.clashroyaledicas.com/wp-content/uploads/2019/05/emote-corredor-beijando-clash-royale.png' WHERE (`ID_Cla` = '4');
