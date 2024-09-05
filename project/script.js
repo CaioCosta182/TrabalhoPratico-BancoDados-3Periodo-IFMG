@@ -1,15 +1,39 @@
 document.addEventListener("DOMContentLoaded", () => {
   init(); // Inicializa o carregamento dos dados ao carregar a página
   document.getElementById("formAddJogador").addEventListener("submit", addJogador); // Adiciona o evento de submissão ao formulário de adicionar jogador
+  document.getElementById("formAlterJogador").addEventListener("submit", alterJogador); // Adiciona o evento de submissão ao formulário de adicionar jogador
   document.getElementById("reportType").addEventListener("change", handleReportChange); // Adiciona o evento de mudança ao seletor de relatório
-  document.getElementById("orderByEvents").addEventListener("change", loadEventos);
-
+  document.getElementById("orderByEvents").addEventListener("change", loadEventos); // Adiciona a filtragem a lista de eventos na busca
+  document.getElementById("orderByAttack").addEventListener("change", loadAtaques); // Adiciona a filtragem a lista de ataques na busca
+  document.getElementById("orderByClans").addEventListener("change", loadClans); // Adiciona a filtragem a lista de clãs na busca
+  document.getElementById("orderByPlayers").addEventListener("change", loadJogadores); // Adiciona a filtragem a lista de jogadores na busca
 });
 
+document.addEventListener('DOMContentLoaded', (event) => {
+  var modal = document.getElementById("myModal");
+  var span = document.getElementsByClassName("close")[0];
+    // Quando o usuário clicar no "x" (fechar), fecha o modal
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // Quando o usuário clicar fora do modal, fecha o modal
+    window.onclick = function(event) {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    }
+});
+var id;
 async function init() {
   // Carrega todas as tabelas ao inicializar a página
   await Promise.all([loadJogadores(), loadClansSelect(), loadClans(), loadEventos(), loadAtaques(), loadRanking(), loadRankingClas(), fetchLigas()]);
   renderChart(); // Renderiza o gráfico ao inicializar a página
+}
+
+async function loadModalContent() {
+  var modal = document.getElementById("myModal");
+  modal.style.display = "block";
 }
 
 async function fetchData(endpoint) {
@@ -69,16 +93,49 @@ function renderTable(tableId, headers, data, actionColumn = true) {
 
     // Adiciona eventos de atualização aos botões de ação
     document.querySelectorAll('.update-btn').forEach(button => {
-      button.addEventListener('click', updateJogador);
+    button.addEventListener('click', updateJogador);
     });
   }
 }
 
 // Função de exemplo para o evento de atualização
 function updateJogador(event) {
-  const id = event.target.dataset.id;
+  id = event.target.dataset.id;
   // Implementar a lógica de atualização, por exemplo, abrir um modal para editar os dados
+  loadModalContent();
   console.log(`Atualizar jogador com ID: ${id}`);
+}
+
+async function alterJogador(event){
+  event.preventDefault();
+  var modal = document.getElementById("myModal");
+  const nomeJogador = document.getElementById('Novo_Nome_Jogador').value;
+  // Verifica se todos os campos foram preenchidos
+  if (!nomeJogador) {
+    console.error("Todos os campos são obrigatórios.");
+    return;
+  }
+  console.log(nomeJogador, id);
+
+  try {
+    // Envia uma requisição PUT para alterar um jogador
+    const response = await fetch("http://localhost:3001/api/jogadores", {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ Nome_Jogador: nomeJogador, id: id}),
+    });
+
+    if (response.ok) {
+      modal.style.display = "none";
+      alert('Jogador alterado com sucesso');
+      await loadJogadores(); // Recarrega a lista de jogadores
+    } else {
+      modal.style.display = "none";
+      alert('Erro ao alterar nome do jogador');
+    }
+  } catch (error) {
+    console.error('Erro ao alterar jogador:', error);
+  }
 }
 
 // Função de exemplo para o evento de exclusão
@@ -91,7 +148,8 @@ function deleteJogador(event) {
 
 async function loadJogadores() {
   // Carrega a tabela de jogadores
-  const data = await fetchData("http://localhost:3001/api/jogadores");
+  const orderByPlayers = document.getElementById('orderByPlayers').value;
+  const data = await fetchData("http://localhost:3001/api/jogadores/" + orderByPlayers);
   const headers = `
     <tr>
       <th>ID</th>
@@ -106,7 +164,8 @@ async function loadJogadores() {
 
 async function loadClans() {
   // Carrega a tabela de clãs
-  const data = await fetchData("http://localhost:3001/api/clans");
+  const orderByClans = document.getElementById('orderByClans').value;
+  const data = await fetchData("http://localhost:3001/api/clans/" + orderByClans);
   const headers = `
     <tr>
       <th>ID</th>
@@ -120,8 +179,8 @@ async function loadClans() {
 
 async function loadEventos() {
   // Carrega a tabela de eventos
-  const orderBy = document.getElementById('orderByEvents').value;
-  const data = await fetchData("http://localhost:3001/api/eventos/" + orderBy);
+  const orderByEvents = document.getElementById('orderByEvents').value;
+  const data = await fetchData("http://localhost:3001/api/eventos/" + orderByEvents);
   const headers = `
     <tr>
       <th>Tipo</th>
@@ -133,7 +192,8 @@ async function loadEventos() {
 
 async function loadAtaques() {
   // Carrega a tabela de ataques
-  const data = await fetchData("http://localhost:3001/api/ataques");
+  const orderByAttack = document.getElementById('orderByAttack').value;
+  const data = await fetchData("http://localhost:3001/api/ataques/" + orderByAttack);
   const headers = `
     <tr>
         <th>ID</th>
@@ -345,6 +405,18 @@ async function fetchClans() {
   }
 }
 
+async function fetchClansStats() {
+  // Função para buscar dados dos clãs
+  try {
+    const response = await fetch("http://localhost:3001/api/clans/stats");
+    if (!response.ok) throw new Error('Erro ao buscar dados de clãs');
+    return await response.json();
+  } catch (error) {
+    console.error('Erro:', error);
+    return [];
+  }
+}
+
 async function renderChart() {
   const selectedReportType = reportTypeSelect.value;
   
@@ -365,16 +437,14 @@ async function renderChart() {
     
     createChart(labels, ataques, vitorias, derrotas);
   } else if (selectedReportType === 'clanStats') {
-    const clansData = await fetchClans();
-    
+    const clansData = await fetchClansStats();
+    console.log(clansData);
     const labels = [];
-    const ataques = [];
     const vitorias = [];
     const derrotas = [];
     
     clansData.forEach(item => {
       labels.push(item.Nome); // Nome do clã
-      ataques.push(item.Numero_Ataques || 0);
       vitorias.push(item.Vitorias || 0);
       derrotas.push(item.Derrotas || 0);
     });

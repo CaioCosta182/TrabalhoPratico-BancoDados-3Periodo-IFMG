@@ -45,7 +45,28 @@ async function getDataFromDatabase(query, params = []) {
 app.get("/api/jogadores", async (req, res) => {
   try {
     const jogadores = await getDataFromDatabase("SELECT j.ID_Jogador, j.Nome_Jogador, j.Pontuacao_Total, c.Nome FROM jogador j join Cla c on j.ID_Cla = c.ID_Cla ORDER BY j.ID_Jogador LIMIT 10;"); // Executa a query para buscar jogadores
-    console.log(jogadores);
+    res.json(jogadores); // Retorna os dados dos jogadores em formato JSON
+  } catch (err) {
+    console.error("Erro ao buscar jogadores:", err);
+    res.status(500).send("Erro ao buscar jogadores"); // Retorna um erro 500 se houver falha
+  }
+});
+
+// Rota para obter todos os jogadores por ordem crescente
+app.get("/api/jogadores/1", async (req, res) => {
+  try {
+    const jogadores = await getDataFromDatabase("SELECT j.ID_Jogador, j.Nome_Jogador, j.Pontuacao_Total, c.Nome FROM jogador j join Cla c on j.ID_Cla = c.ID_Cla ORDER BY j.ID_Jogador asc LIMIT 10;"); // Executa a query para buscar jogadores
+    res.json(jogadores); // Retorna os dados dos jogadores em formato JSON
+  } catch (err) {
+    console.error("Erro ao buscar jogadores:", err);
+    res.status(500).send("Erro ao buscar jogadores"); // Retorna um erro 500 se houver falha
+  }
+});
+
+// Rota para obter todos os jogadores por ordem decrescente
+app.get("/api/jogadores/2", async (req, res) => {
+  try {
+    const jogadores = await getDataFromDatabase("SELECT j.ID_Jogador, j.Nome_Jogador, j.Pontuacao_Total, c.Nome FROM jogador j join Cla c on j.ID_Cla = c.ID_Cla ORDER BY j.ID_Jogador desc LIMIT 10;"); // Executa a query para buscar jogadores
     res.json(jogadores); // Retorna os dados dos jogadores em formato JSON
   } catch (err) {
     console.error("Erro ao buscar jogadores:", err);
@@ -57,6 +78,28 @@ app.get("/api/jogadores", async (req, res) => {
 app.get("/api/clans", async (req, res) => {
   try {
     const clans = await getDataFromDatabase("SELECT c.ID_Cla, c.Nome, c.Data_Criacao, l.Nome_Liga FROM Cla c join Liga l on c.ID_Liga = l.ID_Liga"); // Executa a query para buscar clãs
+    res.status(200).json(clans); // Retorna os dados dos clãs em formato JSON com status 200
+  } catch (err) {
+    console.error("Erro ao buscar clãs:", err);
+    res.status(500).send("Erro ao buscar clãs"); // Retorna um erro 500 se houver falha
+  }
+});
+
+// Rota para obter todos os clãs por ordem crescente
+app.get("/api/clans/1", async (req, res) => {
+  try {
+    const clans = await getDataFromDatabase("SELECT c.ID_Cla, c.Nome, c.Data_Criacao, l.Nome_Liga FROM Cla c join Liga l on c.ID_Liga = l.ID_Liga order by c.ID_Cla asc"); // Executa a query para buscar clãs
+    res.status(200).json(clans); // Retorna os dados dos clãs em formato JSON com status 200
+  } catch (err) {
+    console.error("Erro ao buscar clãs:", err);
+    res.status(500).send("Erro ao buscar clãs"); // Retorna um erro 500 se houver falha
+  }
+});
+
+// Rota para obter todos os clãs por ordem decrescente
+app.get("/api/clans/2", async (req, res) => {
+  try {
+    const clans = await getDataFromDatabase("SELECT c.ID_Cla, c.Nome, c.Data_Criacao, l.Nome_Liga FROM Cla c join Liga l on c.ID_Liga = l.ID_Liga order by c.ID_Cla desc"); // Executa a query para buscar clãs
     res.status(200).json(clans); // Retorna os dados dos clãs em formato JSON com status 200
   } catch (err) {
     console.error("Erro ao buscar clãs:", err);
@@ -77,8 +120,6 @@ app.get("/api/eventos", async (req, res) => {
 
 app.get("/api/eventos/1", async (req, res) => {
   try {
-    const { orderBy } = req.body;
-    console.log(req.body);
     const eventos = await getDataFromDatabase("SELECT tipo, count(tipo) FROM evento group by tipo order by count(tipo) asc;"); // Executa a query para buscar eventos
     res.json(eventos); // Retorna os dados dos eventos em formato JSON
   } catch (err) {
@@ -89,8 +130,6 @@ app.get("/api/eventos/1", async (req, res) => {
 
 app.get("/api/eventos/2", async (req, res) => {
   try {
-    const { orderBy } = req.body;
-    console.log(req.body);
     const eventos = await getDataFromDatabase("SELECT tipo, count(tipo) FROM evento group by tipo order by count(tipo) desc;"); // Executa a query para buscar eventos
     res.json(eventos); // Retorna os dados dos eventos em formato JSON
   } catch (err) {
@@ -109,6 +148,40 @@ app.get("/api/ataques", async (req, res) => {
     res.status(500).send("Erro ao buscar ataques"); // Retorna um erro 500 se houver falha
   }
 });
+
+// Rota para obter todos os ataques por ordem de vitória decrescente
+app.get("/api/ataques/1", async (req, res) => {
+  try {
+    const ataques = await getDataFromDatabase("SELECT a.ID_Ataque, j.Nome_Jogador, a.N_Ataques, a.Vitorias, a.Derrotas FROM ataque a join jogador j on a.ID_Jogador = j.ID_Jogador order by a.Vitorias desc LIMIT 10;"); // Executa a query para buscar ataques
+    res.json(ataques); // Retorna os dados dos ataques em formato JSON
+  } catch (err) {
+    console.error("Erro ao buscar ataques:", err);
+    res.status(500).send("Erro ao buscar ataques"); // Retorna um erro 500 se houver falha
+  }
+});
+
+// Rota para obter todos os ataques por ordem de vitória crescente
+app.get("/api/ataques/2", async (req, res) => {
+  try {
+    const ataques = await getDataFromDatabase("SELECT a.ID_Ataque, j.Nome_Jogador, a.N_Ataques, a.Vitorias, a.Derrotas FROM ataque a join jogador j on a.ID_Jogador = j.ID_Jogador order by a.Vitorias asc LIMIT 10;"); // Executa a query para buscar ataques
+    res.json(ataques); // Retorna os dados dos ataques em formato JSON
+  } catch (err) {
+    console.error("Erro ao buscar ataques:", err);
+    res.status(500).send("Erro ao buscar ataques"); // Retorna um erro 500 se houver falha
+  }
+});
+
+// Rota para obter os status dos clans
+app.get("/api/clans/stats", async (req, res) => {
+  try {
+    const clans = await getDataFromDatabase("select c.Nome, sum(a.Vitorias) as Vitorias, sum(a.Derrotas) as Derrotas from ataque a join jogador j on a.ID_Jogador = j.ID_Jogador join cla c on c.ID_Cla = j.ID_Cla group by c.Nome"); // Executa a query para buscar os status dos clãs
+    res.status(200).json(clans); // Retorna os dados dos clãs em formato JSON com status 200
+  } catch (err) {
+    console.error("Erro ao buscar clãs:", err);
+    res.status(500).send("Erro ao buscar clãs"); // Retorna um erro 500 se houver falha
+  }
+});
+
 
 // Rota para adicionar um jogador
 app.post("/api/jogadores", async (req, res) => {
@@ -131,6 +204,26 @@ app.post("/api/jogadores", async (req, res) => {
   } catch (err) {
     console.error("Erro ao adicionar jogador:", err);
     res.status(500).send("Erro ao adicionar jogador"); // Retorna um erro 500 se houver falha
+  }
+});
+
+// Rota para alterar o nome um jogador
+app.put("/api/jogadores", async (req, res) => {
+  console.log(req.body);
+  const { Nome_Jogador, id} = req.body; // Extrai os dados do corpo da requisição
+  // Validação de entrada
+  if (!Nome_Jogador || !id) {
+    return res.status(400).send("Parâmetros inválidos para renomear jogador."); // Retorna um erro 400 se houver parâmetros inválidos
+  }
+
+  const query = "update jogador set Nome_Jogador = '" + Nome_Jogador + "' where ID_Jogador = " + id;
+  console.log(query);
+  try {
+    await getDataFromDatabase(query); // Altera o nome do jogador no banco de dados
+    res.status(200).send("Jogador alterado com sucesso!"); // Retorna sucesso se o jogador for adicionado
+  } catch (err) {
+    console.error("Erro ao alterar jogador:", err);
+    res.status(500).send("Erro ao alterar jogador"); // Retorna um erro 500 se houver falha
   }
 });
 
