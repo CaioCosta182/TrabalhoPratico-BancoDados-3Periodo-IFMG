@@ -17,7 +17,7 @@ app.use(express.json()); // Habilita o parsing de JSON para requisições
 const dbConfig = {
   host: "localhost",
   user: "root",
-  password: "Sk846207",
+  password: "*********",
   database: "jogoclãdb",
   port: 3306,
 };
